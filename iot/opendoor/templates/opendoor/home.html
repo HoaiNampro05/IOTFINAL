@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>IOT OPENDOOR</title>
+    <style>
+      /* CSS cho header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #f2f2f2;
+      }
+
+      /* CSS cho nút Login và Sign up */
+      .header-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+        cursor: pointer;
+      }
+
+      .header-button:hover {
+        background-color: #0069d9;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>IOT OPENDOOR</h1>
+      <div>
+        <a href="{% url 'opendoor:login' %}"><button class="header-button">Login</button></a>
+         <a href="{% url 'opendoor:signup' %}"><button class="header-button">Signup</button></a>
+      </div>
+    </header>
+  </body>
+</html>
