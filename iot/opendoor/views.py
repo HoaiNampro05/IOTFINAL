@@ -2,7 +2,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.http import JsonResponse
 from .models import User,House
 import base64
 from PIL import Image
@@ -90,14 +92,16 @@ def RequestCameraProcesser(request):
         image_data = request.FILES.get('image')
         data = request.POST
         hk = data['housekey']
+        time = datetime.now()
+        timenow = str(time.strftime("%Y-%m-%d %H:%M"))
         if image_data:
             print(image_data)
             nparr = np.frombuffer(image_data.read(), np.uint8)
             print(nparr.shape)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            # nparr = np.frombuffer(image_data.read(), np.uint8)
             # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            _, img_encoded = cv2.imencode('.png', img)
+            img_base64 = base64.b64encode(img_encoded.tobytes()).decode('utf-8')
             try:
                 dsU = User.objects.filter(housekey=hk)
                 for u in dsU:
@@ -106,10 +110,37 @@ def RequestCameraProcesser(request):
                         house  = House.objects.get(housekey =  hk)
                         house.status=1
                         house.save()
+                        channel_layer = get_channel_layer()
+                        async_to_sync(channel_layer.group_send)(
+                            hk,
+                            {
+                                'type': 'send.notification',
+                                'message': "ngườii nha đến lúc " + timenow,
+                                'img': img_base64,
+                            }
+                        )
                         return JsonResponse({"message": "Xác thực thành công","au":au})
                 else:
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)(
+                        hk,
+                        {
+                            'type': 'send.notification',
+                            'message': "người lạ đến lúc " + timenow,
+                            'img': img_base64,
+                        }
+                    )
                     return JsonResponse({"message": "Xác thực không thành công","au":au})
             except:
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    hk,
+                    {
+                        'type': 'send.notification',
+                        'message': "người lạ đến lúc " + timenow,
+                        'img': img_base64,
+                    }
+                )
                 return JsonResponse({"message": "Xác thực không thành công"})
             # print("okkk",encode_face(img))
             cv2.imshow('Image from POST request', img)

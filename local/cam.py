@@ -30,6 +30,7 @@ while True:
         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
        
         if len(faces)>0:
+            # cv2.putText("khuôn mặt đang được xác thưc")
             _, img_encoded = cv2.imencode('.jpg', img)
             img_bytes = img_encoded.tobytes()
             print(type(img_bytes))

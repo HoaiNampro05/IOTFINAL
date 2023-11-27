@@ -82,7 +82,10 @@
       <li><a href="#">Liên Hệ</a></li>
     </ul>
   </nav>
-
+  <div id="notification">
+        <div id="messages"></div>
+        <img id="processed-image" alt="chưa có gì">
+    </div>
   <section>
     <h2>Trạng thái của của nhà bạn: {{ status }}</h2>
     <h2>Bạn có thể</h2>
@@ -100,7 +103,22 @@
         <input type="submit" value="Tắt">
     </form>
   </section>
+    <script type="text/javascript">
+        const groupid = "{{ housekey }}";
+        const socket = new WebSocket(
+            'ws://' + window.location.host + '/ws/socket-server/' + groupid + '/'
+        );
 
+       socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Data:', data);
+        var imgElement = document.getElementById('processed-image');
+        imgElement.src = 'data:image/png;base64,' + data.img;
+        var divElement = document.getElementById("messages");
+        divElement.textContent = data.message;
+      };
+
+    </script>
   <footer>
     <p>Bản quyền &copy; 2023. Tất cả các quyền được bảo lưu.</p>
   </footer>
