@@ -75,7 +75,6 @@
       padding: 10px 20px; /* Khoảng cách giữa nút và nội dung */
       font-size: 16px; /* Cỡ chữ */
       cursor: pointer; /* Con trỏ khi di chuột */
-      border-radius:10px;
     }
 
     input[type="submit"]:hover {
@@ -122,95 +121,6 @@
       text-align: center;
       margin-top: auto;
     }
-    #notification-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #3498db; /* Màu xanh dương */
-    border-radius: 10px; /* Góc bo tròn */
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Hiệu ứng bóng đổ */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    z-index: 999;
-    display: none;
-    color: #ffffff; /* Màu chữ trắng */
-}
-
-#notification-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#notification-image {
-    max-width: 100%;
-    margin-top: 10px;
-    border-radius: 8px; /* Góc bo tròn cho hình ảnh */
-}
-
-#close-btn {
-    margin-top: 10px;
-    cursor: pointer;
-    background-color: #3498db; /* Màu xanh dương */
-    color: #ffffff; /* Màu chữ trắng */
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px; /* Góc bo tròn cho nút */
-    transition: background-color 0.3s ease; /* Hiệu ứng hover */
-}
-
-#close-btn:hover {
-    background-color: #2980b9; /* Màu xanh dương đậm khi hover */
-}
-#notification-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #66FFCC; /* Màu xanh dương */
-    border-radius: 10px; /* Góc bo tròn */
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Hiệu ứng bóng đổ */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    z-index: 999;
-    display: none;
-    color: #ffffff; /* Màu chữ trắng */
-}
-
-#notification-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#notification-image {
-    max-width: 100%;
-    margin-top: 10px;
-    border-radius: 8px; /* Góc bo tròn cho hình ảnh */
-}
-
-#close-btn {
-    margin-top: 10px;
-    cursor: pointer;
-    background-color: #0062cc; /* Màu xanh dương */
-    color: #ffffff; /* Màu chữ trắng */
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px; /* Góc bo tròn cho nút */
-    transition: background-color 0.3s ease; /* Hiệu ứng hover */
-}
-
-#close-btn:hover {
-   opacity:0.8
-}
-
   </style>
 </head>
 <body>
@@ -218,14 +128,23 @@
     <h1>SMARTDOOR</h1>
   </header>
 
+  <nav>
+    <ul>
+      <li><a href="#">Trang Chủ</a></li>
+      <li><a href="#">Sản Phẩm</a></li>
+      <li><a href="#">Dịch Vụ</a></li>
+      <li><a href="#">Liên Hệ</a></li>
+    </ul>
+  </nav>
+
   <section>
-    <h2 style="color:black">Trạng thái của nhà bạn: {{ status }}</h2>
-    <h2 style="color:black">Bạn có thể</h2>
+    <h2>Trạng thái của nhà bạn: {{ status }}</h2>
+    <h2>Bạn có thể</h2>
     <form method="POST" action="{% url 'opendoor:processbutton' %}">
       {% csrf_token %}
-    <input type="hidden" name="housekey" value={{ housekey }}>
-          <input type="hidden" name="status" value=1>
-          <input type="submit" value="Bật">
+<input type="hidden" name="housekey" value={{ housekey }}>
+      <input type="hidden" name="status" value=1>
+      <input type="submit" value="Bật">
     </form>
     <form method="POST" action="{% url 'opendoor:processbutton' %}">
       {% csrf_token %}
@@ -236,7 +155,7 @@
 
     <div id="notification-container">
       <div id="notification-content">
-        <p id="notification-message" style="color:red;font-weight:bold"></p>
+        <p id="notification-message"></p>
         <img id="notification-image" alt="Processed Image">
         <button id="close-btn" onclick="closeNotification()">Đóng</button>
       </div>

@@ -8,4 +8,5 @@ urlpatterns = [
     path('requestcamera',views.RequestCameraProcesser,name="requestcamera"),
     path('housekey', views.getHouseKey, name='housekey'),
     path('processbutton', views.processButton, name='processbutton'),
+    path('servo', views.processServo, name='servo'),
 ]

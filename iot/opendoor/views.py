@@ -37,7 +37,10 @@ class Login(View):
         try:
             user = User.objects.get(username=username)
             house = House.objects.get(housekey=user.housekey)
-            context = {'status': house.status, 'housekey': user.housekey}
+            status = "Đang mở"
+            if house.status==0:
+                status="Đang đóng"
+            context = {'status': status, 'housekey': user.housekey}
             if password == user.password:
                 return render(request, 'opendoor/userhome.html', context=context)
             else:
@@ -107,18 +110,18 @@ def RequestCameraProcesser(request):
                 for u in dsU:
                     au = authe_image(img, u.embedding_vector['embedding_vector'])
                     if au:
-                        house  = House.objects.get(housekey =  hk)
+                        house  = House.objects.get(housekey = hk)
                         house.status=1
                         house.save()
-                        channel_layer = get_channel_layer()
-                        async_to_sync(channel_layer.group_send)(
-                            hk,
-                            {
-                                'type': 'send.notification',
-                                'message': "ngườii nha đến lúc " + timenow,
-                                'img': img_base64,
-                            }
-                        )
+                        # channel_layer = get_channel_layer()
+                        # async_to_sync(channel_layer.group_send)(
+                        #     hk,
+                        #     {
+                        #         'type': 'send.notification',
+                        #         'message': "THÔNG BÁO: Có người nhà về lúc " + timenow,
+                        #         'img': img_base64,
+                        #     }
+                        # )
                         return JsonResponse({"message": "Xác thực thành công","au":au})
                 else:
                     channel_layer = get_channel_layer()
@@ -126,7 +129,7 @@ def RequestCameraProcesser(request):
                         hk,
                         {
                             'type': 'send.notification',
-                            'message': "người lạ đến lúc " + timenow,
+                            'message': "THÔNG BÁO: Có người lạ đến lúc " + timenow,
                             'img': img_base64,
                         }
                     )
@@ -137,7 +140,7 @@ def RequestCameraProcesser(request):
                     hk,
                     {
                         'type': 'send.notification',
-                        'message': "người lạ đến lúc " + timenow,
+                        'message': "THÔNG BÁO: Có người lạ đến lúc " + timenow,
                         'img': img_base64,
                     }
                 )
@@ -165,8 +168,25 @@ def processButton(request):
         house = House.objects.get(housekey=houseKey)
         house.status = int(status)
         house.save()
-        context = {'status': house.status, 'housekey': houseKey}
+        status="Đang mở"
+        if house.status==0:
+            status ="Đang đóng"
+        context = {'status': status, 'housekey': houseKey}
         return render(request, 'opendoor/userhome.html', context=context)
+
+@csrf_exempt
+def processServo(request):
+    if request.method=='POST':
+        housekey = request.data.get('housekey')
+        house = House.objects.filter(housekey=housekey)
+        if house.exists():
+            data = {'status': house.status}
+            return HttpResponse(data)
+        else:
+            data1={'co cai nit':'okkk'}
+            return JsonResponse(data1)
+
+
 # if __name__ == "__main__":
 #     u = User.objects.get(ip_address="123")
 #     u = User.objects.get(ip_address="123")
