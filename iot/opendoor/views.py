@@ -177,14 +177,25 @@ def processButton(request):
 @csrf_exempt
 def processServo(request):
     if request.method=='POST':
-        housekey = request.data.get('housekey')
-        house = House.objects.filter(housekey=housekey)
-        if house.exists():
-            data = {'status': house.status}
-            return HttpResponse(data)
+        data = request.POST
+        housekey = data['housekey']
+        houses = House.objects.filter(housekey=housekey)
+        if houses.exists():
+            house = House.objects.get(housekey=housekey)
+            return JsonResponse({'message': house.status}, status=200)
         else:
-            data1={'co cai nit':'okkk'}
-            return JsonResponse(data1)
+            # Trả về response với status code 404 và dữ liệu JSON
+            return HttpResponseNotFound({'message': 'House not found'})
+# def processServo(request):
+#     if request.method=='POST':
+#         housekey = request.data.get('housekey')
+#         house = House.objects.filter(housekey=housekey)
+#         if house.exists():
+#             data = {'status': house.status}
+#             return HttpResponse(data)
+#         else:
+#             data1={'co cai nit':'okkk'}
+#             return JsonResponse(data1)
 
 
 # if __name__ == "__main__":

@@ -2,7 +2,8 @@ import cv2
 import requests
 HOUSEKEY="12345"
 def send_to_server(image_data):
-    url = 'http://127.0.0.1:8000/requestcamera'
+    url = 'http://13.213.40.27/requestcamera'
+    # url = 'http://127.0.0.1:8000/requestcamera'
     files = {'image': ('image.jpg', image_data)}
     form = {'housekey': HOUSEKEY}
     resp = requests.post(url, data=form,files=files)
