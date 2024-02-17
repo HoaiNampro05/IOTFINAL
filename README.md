@@ -1,4 +1,4 @@
-#Hệ thống mở cửa bằng nhận diện khuôn mặt:
+Hệ thống mở cửa bằng nhận diện khuôn mặt:
 + Có các chức năng:
     -đăng ký người dùng mới theo hộ gia đình
     -thêm sửa xóa người dùng
